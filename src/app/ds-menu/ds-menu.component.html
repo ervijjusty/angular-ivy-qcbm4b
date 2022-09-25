@@ -1,0 +1,10 @@
+<app-ds-menu-list-item
+  *ngFor="let node of items"
+  [node]="node"
+  [level]="1"
+  [submenuLevel]="node?.items.length"
+  [selectedNode]="currentNode"
+  [nodeExpandCollapseStatus]="nodeExpandCollapseStatus"
+>
+</app-ds-menu-list-item>
+<!-- (selectedItem)="selectedListItem($event)" -->

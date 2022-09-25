@@ -1,0 +1,68 @@
+<div class="amml-menu-container">
+  <!-- Base Template rendering condition starts -->
+  <div
+    *ngIf="false && !node.hidden; else baseTemplate"
+    [ngClass]="selectedListClasses"
+    [ngStyle]="getListStyle()"
+    (click)="expand(node)"
+  >
+    <ng-container
+      [ngTemplateOutlet]="listTemplate"
+      [ngTemplateOutletContext]="{
+        item: node,
+        configuration: nodeConfiguration
+      }"
+    >
+    </ng-container>
+  </div>
+  <!-- Base Template rendering condition ends -->
+
+  <!-- Recursive Template calls begins -->
+  <div
+    *ngIf="hasItems() && expanded"
+    [@SlideInOut]
+    [dir]="isRtlLayout() ? 'rtl' : 'ltr'"
+    [ngClass]="classes"
+  >
+    <app-ds-menu-list-item
+      *ngFor="
+        let singleNode of nodeChildren
+          | keyvalue: multilevelMenuService.kvDummyComparerFn
+      "
+      [level]="getLevel(level)"
+      [selectedNode]="selectedNode"
+      [nodeExpandCollapseStatus]="nodeExpandCollapseStatus"
+    >
+    </app-ds-menu-list-item>
+  </div>
+</div>
+<!--  (selectedItem)="selectedListItem($event)" Recursive Template calls ends -->
+
+<!-- Base Template starts from here -->
+<ng-template #baseTemplate>
+  <mat-list-item
+    matRipple
+    *ngIf="!node.hidden"
+    title="{{ node.label }}"
+    [ngClass]="selectedListClasses"
+    [ngStyle]="getListStyle()"
+    (click)="expand(node)"
+  >
+    <ng-container *ngTemplateOutlet="linkTemplate"></ng-container>
+  </mat-list-item>
+</ng-template>
+
+<ng-template #linkTemplate>
+  <ng-template #linkLabelRtlOutlet>
+    <div class="anml-data" [dir]="'rtl'">
+      <ng-container></ng-container>
+      <span class="label">{{ node.label }}</span>
+    </div>
+    <div class="amml-icon-arrow-container" *ngIf="node.hasChildren"></div>
+  </ng-template>
+  <!-- <ng-list-item-content
+    class="filled"
+    [node]="node"
+    [isRtlLayout]="isRtlLayout()"
+  ></ng-list-item-content> -->
+</ng-template>
